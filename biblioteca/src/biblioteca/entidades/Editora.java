@@ -7,6 +7,7 @@ public class Editora implements Registro{
 	private String nome;
 	private String cidade;
 	private String pais;
+	private int id;
 
 	public String getCidade() {
 		return cidade;
@@ -60,6 +61,16 @@ public class Editora implements Registro{
 
 	public String getRotulo() {
 		return "Editora";
+	}
+
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 

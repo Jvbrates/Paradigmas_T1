@@ -4,7 +4,8 @@ import infra.entidades.Registro;
 
 public class Autor implements Registro {
 	private String nome;
-
+	private int id;
+	
 	public Autor(String nome) {
 		setNome(nome);
 	}
@@ -23,5 +24,14 @@ public class Autor implements Registro {
 	@Override
 	public String toString() {
 		return "Nome: " + getNome();
+	}
+
+	@Override
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 }

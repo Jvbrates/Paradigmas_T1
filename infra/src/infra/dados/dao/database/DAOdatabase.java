@@ -4,6 +4,8 @@ import infra.dados.dao.DAO;
 import infra.entidades.Registro;
 //import infra.dados.dao.database.connectionDB;
 import infra.negocios.DadoNaoEncontrado;
+
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.Map;
 
@@ -15,35 +17,69 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 	
 	abstract protected Map<String, String> createMapAdd(T elemento);
 	
-	public void adicionar(T t) {
-
-		Map<String, String> M = createMapAdd(t);
-
+	public void adicionar(T t) throws IllegalArgumentException, IllegalAccessException {
 		
-		String prepare_sql = "INSERT INTO ? VALUES ( "+ " ?".repeat(M.size()) + " )";
 		
-		try {
-			
-			int i = 0;
-			PreparedStatement p = conn.prepareStatement(prepare_sql, Statement.RETURN_GENERATED_KEYS);
-			p.setString(0, tableName);
-			for (Map.Entry<String, String> item: M.entrySet()) {
-				i++;
-				if(item.getKey().charAt(0) == '_') {
-					p.setInt(i, Integer.parseInt(item.getValue()));
-				} else {
-					p.setString(i, item.getValue());
-				}
-		        
-				
+		String sql = "INSERT INTO ? VALUES ( ";
+	    Field[] allFields = t.getClass().getDeclaredFields();
+	    
+	    for(Field field: allFields) {
+	        field.setAccessible(true);
+	
+		    if(field.getType().toString() != "Arraylist" && field.get(t) != null) {
+		    	sql+="? ,";
+		    	}
 		    }
+	    
+	    //Aqui remove a virgula
+	    sql+=");";
+	    
+	    try {
+			PreparedStatement p = conn.prepareStatement(sql);
+			int i = 1;
+		    for(Field field: allFields) {
+		        field.setAccessible(true);
+		        
+		       switch(field.getType().toString()) {
+			       
+			       case "ArrayList":{
+			    	   break;
+			       }
+			       case "int":{
+			    	   p.setInt(i, field.getInt(t));
+			    	   break;
+			       }
+			       case "class java.lang.String":{
+			    	   p.setString(i, (String)field.get(t));
+			    	   break;
+			       }
+			       
+			       default :{
+			    	   p.setInt(i, ((Registro)(field.get(t))).getId());
+			       }
+			       
+		       }
+		        
+		    }
+		    
+		    
+		    int r = p.executeUpdate();
+		    if(r == 0) {
+		    	System.out.println("Deu merda");
+		    } else {
+		    	System.out.println("Deu Certo");
+		    }
+		    
+		    
+		    
+		    
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
+	    
+	    
 	};
 	
 	

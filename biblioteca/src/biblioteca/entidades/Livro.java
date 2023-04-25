@@ -1,15 +1,17 @@
 package biblioteca.entidades;
 
-import infra.entidades.Registro;
-
 import java.util.ArrayList;
+
+import infra.entidades.Registro;
 
 public class Livro implements Registro {
 	private ArrayList<Autor> autores = new ArrayList<Autor>();
-	private Editora editora;
+	private int id;
 	private String isbn;
 	private String titulo;
-
+	private int ano;
+	private Editora editora;	
+	
 	public Livro(String isbn) {
 		setIsbn(isbn);
 	}
@@ -41,6 +43,10 @@ public class Livro implements Registro {
 	public String getTitulo() {
 		return titulo;
 	}
+	
+	public int getAno() {
+		return ano;
+	}
 
 	public void setAutores(ArrayList<Autor> autores) {
 		this.autores = autores;
@@ -53,12 +59,16 @@ public class Livro implements Registro {
 	public void setIsbn(String isbn) {
 		if (isbn != null)
 			if (isbn.length() < 10 || isbn.length() > 13)
-				throw new IllegalArgumentException("ISBN Inválido");
+				throw new IllegalArgumentException("ISBN Invï¿½lido");
 		this.isbn = isbn;
 	}
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
+	}
+	
+	public void setAno(int ano) {
+		this.id = ano;
 	}
 
 	@Override
@@ -68,7 +78,7 @@ public class Livro implements Registro {
 		s.append(getIsbn());
 		s.append("\nTitulo: ");
 		s.append(getTitulo());
-		s.append(getEditora() == null ? "\nEditora: Não informada" : "\n" + getEditora());
+		s.append(getEditora() == null ? "\nEditora: Nï¿½o informada" : "\n" + getEditora());
 		s.append("\nAutores: ");
 		for (Autor a : getAutores())
 			s.append("\n\t" + a);
@@ -78,5 +88,16 @@ public class Livro implements Registro {
 	public boolean equals(Object obj) {
 		Livro l = (Livro) obj;
 		return l.getIsbn().equals(getIsbn());
+	}
+	
+	
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 }

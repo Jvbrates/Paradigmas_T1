@@ -1,7 +1,7 @@
 package biblioteca.dados.memoria;
 
-import infra.dados.dao.memoria.DAOMemoria;
 import biblioteca.entidades.Editora;
+import infra.dados.dao.memoria.DAOMemoria;
 
 public class DAOEditoras extends DAOMemoria<Editora>{
 	protected void preencher(Editora destino, Editora origem) {

@@ -1,11 +1,11 @@
 package biblioteca.dados;
 
-import infra.dados.armazenamento.Armazenamento;
-import infra.dados.armazenamento.TipoArmazenamento;
-import infra.dados.dao.DAO;
 import biblioteca.dados.memoria.FabricaDAOMemoria;
 import biblioteca.entidades.Editora;
 import biblioteca.entidades.Livro;
+import infra.dados.armazenamento.Armazenamento;
+import infra.dados.armazenamento.TipoArmazenamento;
+import infra.dados.dao.DAO;
 
 
 public abstract class FabricaDAO {

@@ -1,7 +1,7 @@
 package biblioteca.dados.memoria;
 
-import infra.dados.dao.memoria.DAOMemoria;
 import biblioteca.entidades.Livro;
+import infra.dados.dao.memoria.DAOMemoria;
 
 public class DAOLivros extends DAOMemoria<Livro>{
 	@Override

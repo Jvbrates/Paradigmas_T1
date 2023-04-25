@@ -1,9 +1,9 @@
 package biblioteca.dados.memoria;
 
-import infra.dados.dao.DAO;
 import biblioteca.dados.FabricaDAO;
 import biblioteca.entidades.Editora;
 import biblioteca.entidades.Livro;
+import infra.dados.dao.DAO;
 
 public class FabricaDAOMemoria extends FabricaDAO {
 	

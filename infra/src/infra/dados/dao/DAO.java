@@ -6,7 +6,7 @@ import infra.negocios.DadoNaoEncontrado;
 import java.util.Collection;
 
 public interface DAO<T extends Registro> {
-	public void adicionar(T t);
+	public void adicionar(T t) throws IllegalArgumentException, IllegalAccessException;
 	public void remover(T t) throws DadoNaoEncontrado;
 	public void alterar(T e) throws DadoNaoEncontrado;
 	public T buscar(T elemento) throws DadoNaoEncontrado;
