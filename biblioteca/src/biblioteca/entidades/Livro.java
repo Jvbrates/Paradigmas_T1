@@ -68,7 +68,7 @@ public class Livro implements Registro {
 	}
 	
 	public void setAno(int ano) {
-		this.id = ano;
+		this.ano = ano;
 	}
 
 	@Override

@@ -13,41 +13,40 @@ import org.junit.jupiter.api.Test;
 import infra.dados.dao.database.DAOdatabase;
 import infra.negocios.DadoNaoEncontrado;
 
-class DaoLivro extends DAOdatabase<Livro>{
+class DaoEditora extends DAOdatabase<Editora>{
 
-	
-	static String tableName = "livro";
-	
 	@Override
-	public void remover(Livro t) throws DadoNaoEncontrado {
+	public void remover(Editora t) throws DadoNaoEncontrado {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void alterar(Livro e) throws DadoNaoEncontrado {
+	public void alterar(Editora e) throws DadoNaoEncontrado {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Collection<Livro> buscarTodos() {
+	public Collection<Editora> buscarTodos() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected Map<String, String> createMapAdd(Livro elemento) {
+	protected Map<String, String> createMapAdd(Editora elemento) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+
 }
 
 class teste {
 
 	@Test
 	void test() throws IllegalArgumentException, IllegalAccessException {
+		
 		
 		Livro a = new Livro();
 		a.setIsbn("12345678910");
@@ -59,7 +58,10 @@ class teste {
 		
 		a.setAutores(lautor);
 		Editora e = new Editora();
-		e.setNome("AAA");
+		e.setNome("TesteNome");
+		e.setCidade("TesteCidade");
+		e.setPais("TestePais");
+		
 		e.setId(33);
 		a.setEditora(e);
 		
@@ -75,7 +77,7 @@ class teste {
 		 */
 	    
 	    
-	    e.setId(2);
+	    e.setId(1);
 	    Livro testcad = new Livro();
 	    testcad.setAutores(lautor);
 	    testcad.setIsbn("12345678910");
@@ -83,8 +85,11 @@ class teste {
 	    testcad.setEditora(e);
 	    testcad.setAno(2011);
 	    
-	    DaoLivro dl = new DaoLivro();
-	    dl.adicionar(testcad);
+	    DaoEditora dl = new DaoEditora();
+	    dl.tableName = "livro";
+	    dl.adicionar(e);
+	    //dl.adicionar(testcad);
+	    
 	    
 		
 		fail("Not yet implemented");
