@@ -20,7 +20,7 @@ public abstract class DAOMemoria<T extends Registro> implements DAO<T>{
 			throw new DadoNaoEncontrado();
 	}
 
-	public void alterar(T e) throws DadoNaoEncontrado {
+	public void alterar(T e) throws DadoNaoEncontrado{
 		for (T temp : dados) {
 			if (temp.equals(e)) {
 				preencher(temp,e);
@@ -30,11 +30,16 @@ public abstract class DAOMemoria<T extends Registro> implements DAO<T>{
 
 	protected abstract void preencher(T destino, T origem);
 
-	public T buscar(T elemento) throws DadoNaoEncontrado { 
+	public Collection<T> buscar(T elemento) throws DadoNaoEncontrado {
+		Collection<T> retorno = new ArrayList<T>();
 		for (T e : dados)
 			if (e.equals(elemento))
-				return e;
+				retorno.add(e);
+		
+		if(retorno.size() == 0)
 		throw new DadoNaoEncontrado();
+		
+		return retorno;
 	}
 
 	public Collection<T> buscarTodos() {

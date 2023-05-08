@@ -7,7 +7,7 @@ public class Editora implements Registro{
 	private String nome;
 	private String cidade;
 	private String pais;
-	private int id;
+	private long id;
 
 	public String getCidade() {
 		return cidade;
@@ -64,12 +64,11 @@ public class Editora implements Registro{
 	}
 
 	@Override
-	public int getId() {
-		// TODO Auto-generated method stub
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

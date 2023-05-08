@@ -6,7 +6,7 @@ import infra.entidades.Registro;
 
 public class Livro implements Registro {
 	private ArrayList<Autor> autores = new ArrayList<Autor>();
-	private int id;
+	private long id;
 	private String isbn;
 	private String titulo;
 	private int ano;
@@ -92,12 +92,15 @@ public class Livro implements Registro {
 	
 	
 	@Override
-	public int getId() {
+	public long getId() {
 		// TODO Auto-generated method stub
 		return id;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
+
+	@Override
+	public void setId(long id) {
+		// TODO Auto-generated method stub
+		
 	}
 }

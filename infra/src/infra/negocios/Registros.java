@@ -24,7 +24,7 @@ public class Registros<T extends Registro> {
 		this.dao = dao;
 	}
 
-	public void inserir(T t) {
+	public void inserir(T t) throws IllegalArgumentException, IllegalAccessException {
 		if (t == null)
 			throw new IllegalArgumentException("Nao pode ser inserido um objeto nulo (NULL)");
 		dao.adicionar(t);
