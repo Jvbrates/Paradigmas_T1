@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/jvbrates/Downloads/DBTeste/lib/postgresql-8.3-604.jdbc4.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/jvbrates/gits/Paradigmas_T1/infra/lib/postgresql-42.6.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

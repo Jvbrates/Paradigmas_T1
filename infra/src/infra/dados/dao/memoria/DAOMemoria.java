@@ -30,7 +30,7 @@ public abstract class DAOMemoria<T extends Registro> implements DAO<T>{
 
 	protected abstract void preencher(T destino, T origem);
 
-	public Collection<T> buscar(T elemento) throws DadoNaoEncontrado {
+	public Collection<T> buscar(T elemento) throws DadoNaoEncontrado,  Exception, IllegalAccessException {
 		Collection<T> retorno = new ArrayList<T>();
 		for (T e : dados)
 			if (e.equals(elemento))

@@ -36,13 +36,13 @@ public abstract class Menu {
 		this.titulo = titulo;
 	}
 
-	public int mostrar() {
+	public int mostrar() throws Exception{
 		System.out.println("----------------------------");
 		System.out.println(getTitulo());
 		System.out.println("----------------------------");
 		desenhar();
 		System.out.println("----------------------------");
-		return Util.lerInteiro("Digite a opção desejada:", 1, getOpcoes().size());
+		return Util.lerInteiro("Digite a opï¿½ï¿½o desejada:", 1, getOpcoes().size());
 	}
 
 	private void desenhar() {
@@ -55,6 +55,6 @@ public abstract class Menu {
 		return getOpcoes().size();
 	}
 
-	public abstract void executar(int opcao);
+	public abstract void executar(int opcao) throws Exception;
 
 }

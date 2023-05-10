@@ -1,5 +1,7 @@
 package infra.console.formularios.cadastro;
 
+import java.util.Collection;
+
 import infra.console.util.Util;
 import infra.entidades.Registro;
 import infra.negocios.DadoNaoEncontrado;
@@ -14,18 +16,25 @@ public abstract class FExclusao<T extends Registro> extends FBusca<T> {
 	@Override
 	public void mostrar() {
 		super.mostrar();
-		ler();
-		submeter();
+		try {
+			ler();
+			submeter();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
-	protected void submeter() {
+	protected void submeter() throws Exception {
 		try {
-			T t = buscar();
+			Collection<T> resultQueryT = buscar();
+			T t = resultQueryT.iterator().next();
 			if (Util.confirma(getTitulo())) {
 				getRegistros().remover(t);
 				System.out.println("Registro removido.");
 			} else
-				System.out.println("Operação cancelada - " + getTitulo());
+				System.out.println("Operaï¿½ï¿½o cancelada - " + getTitulo());
 		} catch (DadoNaoEncontrado e) {
 			System.out.println("Registro nao encontrado.");
 		}

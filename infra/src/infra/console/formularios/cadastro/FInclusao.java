@@ -24,7 +24,7 @@ public abstract class FInclusao<T extends Registro> extends FCadastro<T> {
 
 	public FInclusao(Registros<T> registros) {
 		super(registros);
-		setTitulo("Inclusão de " + registros.getRotulo());
+		setTitulo("Inclusï¿½o de " + registros.getRotulo());
 	}
 
 	protected ArrayList<Campo> campos = new ArrayList<Campo>();
@@ -50,7 +50,7 @@ public abstract class FInclusao<T extends Registro> extends FCadastro<T> {
 	}
 
 	@Override
-	public void mostrar() {
+	public void mostrar(){
 		if (getRegistro() == null)
 			throw new IllegalArgumentException("O registro nao pode ser nulo. Use setRegistro no construtor do formulario...");
 		super.mostrar();
@@ -59,7 +59,7 @@ public abstract class FInclusao<T extends Registro> extends FCadastro<T> {
 		if (Util.confirma(getTitulo()))
 			submeter();
 		else
-			System.out.println("Operação cancelada - " + getTitulo());
+			System.out.println("Operaï¿½ï¿½o cancelada - " + getTitulo());
 	}
 
 	protected abstract void vincular();

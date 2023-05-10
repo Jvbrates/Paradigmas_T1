@@ -10,7 +10,7 @@ public abstract class Formulario {
 
 	public String getTitulo() {
 		if (titulo == null)
-			return "(Sem título no formulario)";
+			return "(Sem tï¿½tulo no formulario)";
 		else
 			return titulo;
 	}
@@ -19,9 +19,13 @@ public abstract class Formulario {
 		this.titulo = titulo;
 	}
 
-	public void mostrar() {
+	public void mostrar(){
 		System.out.println("----------------------------");
+		try {
 		System.out.println(getTitulo());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		System.out.println("----------------------------");
 	}
 }

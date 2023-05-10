@@ -12,9 +12,14 @@ public class FListagem<T extends Registro> extends FCadastro<T>{
 	@Override
 	public void mostrar() {
 		super.mostrar();
-		for (T temp : getRegistros().buscarTodos()) {
-			System.out.println(temp);
-			System.out.println("------------------");
+		try {
+			for (T temp : getRegistros().buscarTodos()) {
+				System.out.println(temp);
+				System.out.println("------------------");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

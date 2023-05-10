@@ -9,7 +9,13 @@ public class Autor implements Registro {
 	public Autor(String nome) {
 		setNome(nome);
 	}
+	
+	public Autor() {}
 
+	public boolean equals(Autor a) {
+		return (a.getId() == this.getId());
+	}
+	
 	public String getNome() {
 		return nome;
 	}
@@ -31,10 +37,6 @@ public class Autor implements Registro {
 		return id;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	@Override
 	public void setId(long id) {
 		// TODO Auto-generated method stub

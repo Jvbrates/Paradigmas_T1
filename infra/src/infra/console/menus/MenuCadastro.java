@@ -22,7 +22,7 @@ public class MenuCadastro<T extends Registro> extends Menu {
 		forms.put(indice, form);
 	}
 
-	public void executar(int opcao) {
+	public void executar(int opcao) throws Exception {
 		FCadastro<T> f = forms.get(opcao);
 		if (f == null)
 			throw new IllegalArgumentException("Opcao invalida ou nao suportada");

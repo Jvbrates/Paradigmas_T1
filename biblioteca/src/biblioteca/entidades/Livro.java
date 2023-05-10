@@ -2,15 +2,18 @@ package biblioteca.entidades;
 
 import java.util.ArrayList;
 
+import biblioteca.dados.database.DAOEditora;
 import infra.entidades.Registro;
+import infra.negocios.DadoNaoEncontrado;
 
 public class Livro implements Registro {
 	private ArrayList<Autor> autores = new ArrayList<Autor>();
 	private long id;
 	private String isbn;
 	private String titulo;
+	private int edicao;
 	private int ano;
-	private Editora editora;	
+	private long editora;	
 	
 	public Livro(String isbn) {
 		setIsbn(isbn);
@@ -28,10 +31,30 @@ public class Livro implements Registro {
 		return autores;
 	}
 
-	public Editora getEditora() {
+	public long getEditora() {
 		return editora;
 	}
 
+    public Editora viewEditora(){
+    	DAOEditora tmp = new DAOEditora();
+    	Editora ed = new Editora();
+    	ed.setId(editora);
+    	try {
+			return tmp.buscar(ed).iterator().next();
+			
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DadoNaoEncontrado e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return null;
+    }
 	public String getIsbn() {
 		return isbn;
 	}
@@ -53,7 +76,7 @@ public class Livro implements Registro {
 	}
 
 	public void setEditora(Editora editora) {
-		this.editora = editora;
+		this.editora = editora.getId();
 	}
 
 	public void setIsbn(String isbn) {
@@ -78,7 +101,7 @@ public class Livro implements Registro {
 		s.append(getIsbn());
 		s.append("\nTitulo: ");
 		s.append(getTitulo());
-		s.append(getEditora() == null ? "\nEditora: N�o informada" : "\n" + getEditora());
+		s.append(getEditora() == 0 ? "\nEditora: N�o informada" : "\n-----\n" + viewEditora()+"\n-------");
 		s.append("\nAutores: ");
 		for (Autor a : getAutores())
 			s.append("\n\t" + a);
@@ -101,6 +124,15 @@ public class Livro implements Registro {
 	@Override
 	public void setId(long id) {
 		// TODO Auto-generated method stub
+		this.id = id;
 		
+	}
+
+	public int getEdicao() {
+		return edicao;
+	}
+
+	public void setEdicao(int edicao) {
+		this.edicao = edicao;
 	}
 }

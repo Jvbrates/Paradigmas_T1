@@ -12,7 +12,13 @@ public abstract class FAlteracao<T extends Registro> extends FBusca<T>{
 	@Override
 	public void mostrar() {
 		super.mostrar();
-		ler();
-		submeter();
+		try {
+			ler();
+			submeter();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

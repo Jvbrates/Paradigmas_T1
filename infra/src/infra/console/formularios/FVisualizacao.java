@@ -15,13 +15,19 @@ public abstract class FVisualizacao<T extends Registro> extends FBusca<T> {
 	@Override
 	public void mostrar() {
 		super.mostrar();
-		ler();
-		submeter();
+		
+		try {
+			ler();
+			submeter();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	protected void submeter() {
+	protected void submeter() throws Exception {
 		try {
-			T t = buscar();
+			T t = buscar().iterator().next();
 			System.out.println(t);
 		} catch (DadoNaoEncontrado e) {
 			System.out.println("Registro nao encontrado.");

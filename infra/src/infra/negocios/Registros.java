@@ -24,31 +24,76 @@ public class Registros<T extends Registro> {
 		this.dao = dao;
 	}
 
-	public void inserir(T t) throws IllegalArgumentException, IllegalAccessException {
+	public void inserir(T t){
 		if (t == null)
 			throw new IllegalArgumentException("Nao pode ser inserido um objeto nulo (NULL)");
-		dao.adicionar(t);
+		try {
+			dao.adicionar(t);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public void alterar(T t) throws DadoNaoEncontrado {
+	public void alterar(T t) {
 		if (t == null)
 			throw new IllegalArgumentException("Nao pode ser alterado um objeto nulo (NULL)");
-		dao.alterar(t);
+		try {
+			dao.alterar(t);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DadoNaoEncontrado e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public void remover(T t) throws DadoNaoEncontrado {
+	public void remover(T t){
 		if (t == null)
 			throw new IllegalArgumentException("Nao pode ser removido um objeto nulo (NULL)");
-		dao.remover(t);
+		try {
+			dao.remover(t);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public T buscar(T t) throws DadoNaoEncontrado {
+	public Collection<T> buscar(T t){
 		if (t == null)
 			throw new IllegalArgumentException("Nao pode ser buscado um objeto nulo (NULL)");
-		return dao.buscar(t);
+		try {
+			return dao.buscar(t);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DadoNaoEncontrado e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public Collection<T> buscarTodos() {
-		return dao.buscarTodos();
+		try {
+			return dao.buscarTodos();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
