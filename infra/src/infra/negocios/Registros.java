@@ -3,7 +3,9 @@ package infra.negocios;
 import infra.dados.dao.DAO;
 import infra.entidades.Registro;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 public class Registros<T extends Registro> {
 	protected String rotulo;
@@ -69,22 +71,21 @@ public class Registros<T extends Registro> {
 		}
 	}
 	
-	public Collection<T> buscar(T t){
+	public Collection<T> buscar(T t) throws IllegalAccessException{
 		if (t == null)
 			throw new IllegalArgumentException("Nao pode ser buscado um objeto nulo (NULL)");
+
+		Collection<T> r = new ArrayList<>();
+
 		try {
-			return dao.buscar(t);
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DadoNaoEncontrado e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			r = dao.buscar(t);
+		}  catch (DadoNaoEncontrado ignored){
+			System.out.println("Busca retornou vazio");
+
 		}
-		return null;
+
+		return r;
+
 	}
 
 	public Collection<T> buscarTodos() {

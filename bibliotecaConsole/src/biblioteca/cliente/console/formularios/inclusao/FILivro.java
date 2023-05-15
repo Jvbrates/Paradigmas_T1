@@ -1,6 +1,7 @@
 package biblioteca.cliente.console.formularios.inclusao;
 
 import infra.console.formularios.cadastro.FInclusao;
+import infra.console.formularios.cadastro.campos.CampoInteiroMonoValorado;
 import infra.console.formularios.cadastro.campos.CampoMonoValorado;
 import infra.console.formularios.cadastro.campos.CampoMultiValorado;
 import infra.console.util.Util;
@@ -8,6 +9,7 @@ import infra.negocios.DadoNaoEncontrado;
 import infra.negocios.Registros;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import biblioteca.entidades.Autor;
 import biblioteca.entidades.Editora;
@@ -19,7 +21,11 @@ public class FILivro extends FInclusao<Livro> {
 	public static final String TITULO = "Titulo";
 	public static final String ISBN = "ISBN";
 	public static final String EDITORA = "Editora";
+	public static final String EDICAO = "EDICAO";
+	public static final String ANO = "ANO";
 	public static final String AUTOR = "Autores";
+
+
 
 	public FILivro(Registros<Livro> registros) {
 		super(registros);
@@ -28,6 +34,8 @@ public class FILivro extends FInclusao<Livro> {
 		adicionarCampo(new CampoMonoValorado(TITULO, 1, 60));
 		adicionarCampo(new CampoMultiValorado(AUTOR, 1, 60, 5));
 		adicionarCampo(new CampoMonoValorado(EDITORA, 1, 60));
+		adicionarCampo(new CampoInteiroMonoValorado(ANO, 0, 5000));
+		adicionarCampo(new CampoInteiroMonoValorado(EDICAO, 0, 5000));
 	}
 
 	@Override
@@ -39,19 +47,18 @@ public class FILivro extends FInclusao<Livro> {
 				getCampoMonoValorado(EDITORA).setValor(Util.lerString(EDITORA + ": ", 1, 60));
 			Editoras editoras = new Editoras();
 			try {
-				Editora e = editoras.buscar(new Editora(getValor(EDITORA)));
+				Collection<Editora> c_ed = editoras.buscar(new Editora(getValor(EDITORA)));
+				Editora e = c_ed.iterator().next();
 				System.out.println(e);
 				getRegistro().setEditora(e);
+
+				if (c_ed.size() == 0)
+					System.out.println("Editora não encontrada");
 				break;
-			} catch (DadoNaoEncontrado e) {
-				if (Util.confirma("Deseja incluir esta nova editora?")) {
-					FIEditora f = new FIEditora(new Editoras());
-					f.getCampoMonoValorado(FIEditora.NOME).setValor(getValor(EDITORA));
-					f.mostrar();
-					getRegistro().setEditora(f.getRegistro());
-					break;
-				} else
-					ok = false;
+
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		} while (true);
 	}
@@ -59,6 +66,8 @@ public class FILivro extends FInclusao<Livro> {
 	@Override
 	protected void vincular() {
 		Livro l = getRegistro();
+		l.setAno(getValorInteiro("ANO"));
+		l.setEdicao(getValorInteiro("EDICAO"));
 		if (modoAlteracao()) {
 			if (!getValor(TITULO).isEmpty())
 				l.setTitulo(getValor(TITULO));
@@ -94,11 +103,13 @@ public class FILivro extends FInclusao<Livro> {
 			Livros livros = new Livros();
 			try {
 				livros.alterar(getRegistro());
-			} catch (DadoNaoEncontrado e) {
-				System.out.println("Editora nao encontrada");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} else {
 			Livros livros = new Livros();
+			System.out.println("Chamando Inserir");
 			livros.inserir(getRegistro());
 		}
 	}

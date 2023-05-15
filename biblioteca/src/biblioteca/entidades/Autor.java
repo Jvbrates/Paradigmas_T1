@@ -5,6 +5,15 @@ import infra.entidades.Registro;
 public class Autor implements Registro {
 	private String nome;
 	private long id;
+	private long id_livro;
+
+	public long getId_livro(){
+		return id_livro;
+	}
+
+	public void setId_livro(long id_livro){
+		this.id_livro = id_livro;
+	}
 	
 	public Autor(String nome) {
 		setNome(nome);
@@ -12,8 +21,13 @@ public class Autor implements Registro {
 	
 	public Autor() {}
 
-	public boolean equals(Autor a) {
-		return (a.getId() == this.getId());
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if(o.getClass() != Autor.class)
+			return false;
+
+		Autor a = (Autor)o;
+		return (a.getId_livro() == this.getId_livro());
 	}
 	
 	public String getNome() {
@@ -40,6 +54,6 @@ public class Autor implements Registro {
 	@Override
 	public void setId(long id) {
 		// TODO Auto-generated method stub
-		
+		this.id = id;
 	}
 }

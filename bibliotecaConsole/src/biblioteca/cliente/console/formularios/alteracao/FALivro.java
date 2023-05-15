@@ -15,13 +15,18 @@ public class FALivro extends FAlteracao<Livro> {
 	@Override
 	protected void ler() {
 		String isbn = Util.lerString("ISBN: ", 10, 13);
-		setRegistroBusca(new Livro(isbn));
+		try {
+			setRegistroBusca(new Livro(isbn));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	protected void submeter() {
 		try {
-			Livro e = buscar();
+			Livro e = buscar().iterator().next();
 			System.out.println(e);
 			FILivro fi = new FILivro(getRegistros());
 			fi.setRegistro(e);
@@ -33,6 +38,9 @@ public class FALivro extends FAlteracao<Livro> {
 			fi.mostrar();
 		} catch (DadoNaoEncontrado e) {
 			System.out.println("Registro nao encontrado.");
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 }

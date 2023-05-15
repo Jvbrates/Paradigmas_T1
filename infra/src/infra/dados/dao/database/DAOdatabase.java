@@ -22,23 +22,7 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 		
 	final static Connection conn =  connectionDB.getConn();
 	
-	protected static String tableName;
 	protected Class<T> Tclass;
-	
-	
-	public void testeInstance() {
-		Field[] f = Tclass.getDeclaredFields();
-		
-		for (Field field : f) {
-			field.setAccessible(true);
-			System.out.println(">"+
-			field.getName()
-					);
-				
-		}
-		
-	}
-	
 
 	public DAOdatabase(Class<T> tclass) {
 		this.Tclass = tclass;
@@ -46,13 +30,13 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 	
 	
 	public String getTableName() {
-		System.out.println( "Gettable name "+ Tclass.getSimpleName().toUpperCase());
+
 		return Tclass.getSimpleName().toUpperCase();
 	}
 	
 	
 	/* Get an array of T objects from a Result Set*/
-	protected Collection<T> CollectionFromRSet(ResultSet rset) throws Exception{
+	protected Collection<T> CollectionFromRSet(ResultSet rset) throws SQLException{
 		ArrayList<T> retorno = new ArrayList<T>();
 		
 		ResultSetMetaData rsMetaData = rset.getMetaData();
@@ -62,34 +46,36 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 			MetaMap.add(rsMetaData.getColumnName(i));
 		}
 		
-		
-		while(rset.next()) {
-			System.out.println("r7");
-			T ed = Tclass.getDeclaredConstructor().newInstance();
-			
-			Field[] fd = Tclass.getDeclaredFields();
-			
-			for (Field field : fd) {
-				field.setAccessible(true);
-				int indice = MetaMap.indexOf(field.getName());
-				if(indice != -1) {
-					if(field.getType().getInterfaces().length > 0 && field.getType().getInterfaces()[0].getSimpleName().equals("Registro")) {
-						field.set(ed, field.getClass().getDeclaredConstructor().newInstance());
-						Registro foreing = (Registro)(field.get(ed));
-						foreing.setId((long) rset.getObject(indice+1));
-						
-					} else { 
-						
-						if(field.getType().getInterfaces().length > 0) {System.out.println(field.getType().getInterfaces().length + field.getType().getInterfaces()[0].getSimpleName());}
-						field.set(ed, rset.getObject(indice+1));
+		try {
+			while (rset.next()) {
+
+				T ed = Tclass.getDeclaredConstructor().newInstance();
+
+				Field[] fd = Tclass.getDeclaredFields();
+
+				for (Field field : fd) {
+					field.setAccessible(true);
+					int indice = MetaMap.indexOf(field.getName());
+					if (indice != -1) {
+						if (field.getType().getInterfaces().length > 0 && field.getType().getInterfaces()[0].getSimpleName().equals("Registro")) {
+							field.set(ed, field.getClass().getDeclaredConstructor().newInstance());
+							Registro foreing = (Registro) (field.get(ed));
+							foreing.setId((long) rset.getObject(indice + 1));
+
+						} else {
+							field.set(ed, rset.getObject(indice + 1));
+						}
 					}
 				}
+
+				retorno.add(ed);
 			}
-			
-			retorno.add(ed);
+		} catch (IllegalAccessException | NoSuchMethodException a){
+			a.printStackTrace();
+		} catch (InvocationTargetException | InstantiationException e) {
+			throw new RuntimeException(e);
 		}
-		
-		
+
 		return retorno;
 	}
 	
@@ -112,13 +98,14 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 	    
 	    for(Field field: allFields) {
 	        field.setAccessible(true);
-	        
+
+			System.out.println(field.getName());
 	        // Por favor que este IF funcione
 		    if(!(field.getType().toString().equalsIgnoreCase("class java.util.ArrayList")) 
 		    		&& field.get(t) != null
 		    		&& field.getName() != "id") {
 		    	
-		    	System.out.println(field.getName()+"| " +field.getType().toString() + ":" + field.get(t));
+
 		    	prefix_sql+=(field.getName()+", ");
 		    	suffix_sql+="?, ";
 		    	}
@@ -143,11 +130,12 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 	    	
 			PreparedStatement p = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			System.out.println("Passou do prepared statement");
+			System.out.println(sql);
 			int i = 1;
 		    for(Field field: allFields) {
 		        field.setAccessible(true);
-		        
-		        
+
+				System.out.println(field.getName());
 		       switch(field.getType().toString()) {
 			       
 			       case "class java.util.ArrayList":{
@@ -155,7 +143,7 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 			       }
 			       case "int":{
 			    	   if(field.getName() != "id") {
-				    	   System.out.println(field.get(t) + " | " + field.getType().toString() + " " + i);
+
 				    	   p.setInt(i, field.getInt(t));
 				    	   i++;
 				    	   } else {
@@ -166,7 +154,6 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 			    	   break;}
 			       case "long":{
 			    	   if(field.getName() != "id") {
-			    	   System.out.println(field.get(t) + " | " + field.getType().toString() + " " + i);
 			    	   p.setLong(i, field.getLong(t));
 			    	   i++;
 			    	   } else {
@@ -177,14 +164,22 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 			    	   break;
 			       }
 			       case "class java.lang.String":{
-			    	   System.out.println(field.get(t) + " | " + field.getType().toString() + " " + i + " "  + field.getName());
+
 			    	   p.setString(i, (String)field.get(t));
 			    	   i++;
 			    	   break;
 			       }
+
+				   case "class java.sql.Date" :{
+					   p.setDate(i, (Date) field.get(t));
+					   i++;
+					   break;
+				   }
+
+
 			       
 			       default :{
-			    	   System.out.println( field.getName()+" _|" + field.getType().toString() + " " + i);
+
 			    	   long id = (
 			    			   (
 			    					   (Registro)(
@@ -204,43 +199,24 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 		    
 		    int r = p.executeUpdate();
 		    
-		    try (ResultSet generatedKeys = p.getGeneratedKeys()) {
+		    try {
+				ResultSet generatedKeys = p.getGeneratedKeys();
 	            if (generatedKeys.next()) {
-	            	System.out.print(generatedKeys.getLong(1));
-	                t.setId(generatedKeys.getLong(1));
-	                
-	                
-					/*
-					 * // Add to n:n table
-					 * 
-					 * for(Field field: allFields) { field.setAccessible(true);
-					 * 
-					 * 
-					 * if (field.getType().toString() == "class java.util.ArrayList"){
-					 * ArrayList<Registro> List_realtion = (ArrayList<Registro>)field.get(t);
-					 * 
-					 * System.out.println( List_realtion.get(0).getId() );
-					 * 
-					 * }
-					 * 
-					 * 
-					 * 
-					 * }
-					 */
-	                
+	            	long id = generatedKeys.getLong(1);
+	                t.setId(id);
 	                
 	            }
 	            else {
 	                throw new SQLException("Creating user failed, no ID obtained.");
 	            }
-	        }
-		    
-		   if(r == 0) {
-		    	System.out.println("Deu merda");
-		    } else {
-		    	System.out.println("Deu Certo");
-		    }
-		    
+	        } catch (Exception e) {
+
+				if (r == 0) {
+					System.out.println("Deu merda");
+				} else {
+					System.out.println("Deu Certo");
+				}
+			}
 		    
 		    
 		    
@@ -266,7 +242,7 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 		
 		try {
 			p.setLong(1, t.getId());
-			System.out.println(sql+t.getId());
+			// System.out.println(sql+t.getId());
 			int affectd_rows = p.executeUpdate();
 			if(affectd_rows == 0) {
 				throw new DadoNaoEncontrado();
@@ -282,7 +258,7 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 	
 	//abstract protected Collection<T> CollectionFromRSet(ResultSet rset) throws Exception;
 	
-	public Collection<T> buscar(T t) throws DadoNaoEncontrado, Exception, IllegalAccessException{
+	public Collection<T> buscar(T t) throws DadoNaoEncontrado, IllegalAccessException{
 		String sql = "SELECT * FROM \""+getTableName()+"\" WHERE ";
 		
 		Field[] allFields = null;
@@ -327,6 +303,10 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 				    	   sql+= "LIKE ? AND ";
 				    	   break;
 				       }
+						case "class java.sql.Date":{
+							sql+=" = ? AND ";
+							break;
+						}
 				       
 				       default :{
 				    	   sql+=" = ? AND ";
@@ -342,80 +322,80 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 		
 		// System.out.println(sql);
 		
-		try {
-			PreparedStatement p = conn.prepareStatement(sql);
-			int i = 1;
-			if(t != null) {
-			    for(Field field: allFields) {
-			        field.setAccessible(true);
-			        
-			       if(field.get(t) == null || (field.getName()=="id" && field.getLong(t) == 0))
-					continue;
-			       
-		    		if(field.getType().getName() == "int" && field.getInt(t) == 0)
-		    			continue;
-		    		if(field.getType().getName() == "long" && field.getLong(t) == 0)
-		    				continue;
-			        
-			       switch(field.getType().toString()) {
-			       
-				       case "class java.util.ArrayList":{
-				    	   break;
-				       }
-				       case "int":{
-				    	   p.setInt(i, field.getInt(t));
-				    	   i++;
-				    	   break;
-				       }
-				       case "long":{
-				    	   p.setLong(i, field.getLong(t));
-				    	   i++;
-				    	   break;
-				    	  
-				       }
-				       case "class java.lang.String":{
-				    	   // System.out.println(field.get(t)+ field.getName());
-				    	   p.setString(i, "%"+(String)field.get(t)+"%");
-				    	   i++;
-				    	   break;
-				       }
-				       
-				       default :{
-				    	   // System.out.println( field.getName()+" _|" + field.getType().toString() + " " + i);
-				    	   long id = (
-				    			   (
-				    					   (Registro)(
-				    							   field.get(t)
-				    							   )
-		    					   )
-				    			   .getId()
-				    			   );
-				    	   p.setLong(i, id);
-				    	   i++;
-				    	   
-				       }
-				       
-			       }
-			       
-			    }
-			}
-		    // System.out.println(sql);
-		    
-		    ResultSet r = p.executeQuery();
-		    Collection<T> cr = CollectionFromRSet(r);
+			try {
+				PreparedStatement p = conn.prepareStatement(sql);
 
-		    if(cr.size() == 0) {
-		    	throw new DadoNaoEncontrado();
-		    }
-		    
-		    return cr;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+				int i = 1;
+				if (t != null) {
+					for (Field field : allFields) {
+						field.setAccessible(true);
+
+						if (field.get(t) == null || (field.getName() == "id" && field.getLong(t) == 0))
+							continue;
+
+						if (field.getType().getName() == "int" && field.getInt(t) == 0)
+							continue;
+						if (field.getType().getName() == "long" && field.getLong(t) == 0)
+							continue;
+
+						switch (field.getType().toString()) {
+							case "class java.util.ArrayList" -> {
+							}
+							case "int" -> {
+								p.setInt(i, field.getInt(t));
+								i++;
+							}
+							case "long" -> {
+								p.setLong(i, field.getLong(t));
+								i++;
+
+							}
+							case "class java.lang.String" -> {
+								// System.out.println(field.get(t)+ field.getName());
+								p.setString(i, "%" + (String) field.get(t) + "%");
+								i++;
+							}
+							case "class java.sql.Date" ->{
+								p.setDate(i, (Date) field.get(t));
+								i++;
+							}
+
+							default -> {
+								// System.out.println( field.getName()+" _|" + field.getType().toString() + " " + i);
+								long id = (
+										(
+												(Registro) (
+														field.get(t)
+												)
+										)
+												.getId()
+								);
+								p.setLong(i, id);
+								i++;
+
+							}
+						}
+
+					}
+				}
+				// System.out.println(sql);
+
+				ResultSet r = p.executeQuery();
+				Collection<T> cr = CollectionFromRSet(r);
+
+				if (cr.size() == 0) {
+					throw new DadoNaoEncontrado();
+				}
+
+				return cr;
+
+			} catch (SQLException s){
+				s.printStackTrace();
+			} catch (DadoNaoEncontrado d){
+				throw new DadoNaoEncontrado();
 			}
-		
+		    
 		return null;
-		
 	};
 	
 	public Collection<T> buscarTodos() throws SQLException, Exception{
@@ -453,12 +433,9 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 					}
 					break;
 				}
-				case "class java.lang.String":{
-					sql+=field.getName()+"=?, ";
-					break;
-				}
-				
-				case "class java.util.ArrayList":{
+
+					case "class java.util.ArrayList":{
+						sql+=field.getName()+"=?, ";
 					break;
 				}
 				default:{
@@ -505,6 +482,13 @@ public abstract class DAOdatabase<T extends Registro> implements DAO<T> {
 						i++;
 						break;
 					}
+
+					case "class java.sql.Date" :{
+						p.setDate(i, (Date) field.get(e));
+						i++;
+						break;
+					}
+
 					
 					case "class java.util.ArrayList":{
 						break;

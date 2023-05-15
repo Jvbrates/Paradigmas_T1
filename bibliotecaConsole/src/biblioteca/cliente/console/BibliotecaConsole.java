@@ -5,7 +5,7 @@ import infra.dados.armazenamento.TipoArmazenamento;
 import biblioteca.cliente.console.menus.MenuPrincipal;
 
 public class BibliotecaConsole {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		Armazenamento.setAtual(TipoArmazenamento.MEMORIA);
 		MenuPrincipal m = new MenuPrincipal("Menu Principal");
 		do {

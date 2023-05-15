@@ -8,13 +8,15 @@ import infra.negocios.DadoNaoEncontrado;
 
 public class Livro implements Registro {
 	private ArrayList<Autor> autores = new ArrayList<Autor>();
+
+	private ArrayList<Exemplar> exemplares = new ArrayList<Exemplar>();
+
 	private long id;
 	private String isbn;
 	private String titulo;
 	private int edicao;
 	private int ano;
-	private long editora;	
-	
+	private long editora;
 	public Livro(String isbn) {
 		setIsbn(isbn);
 	}
@@ -23,6 +25,13 @@ public class Livro implements Registro {
 
 	}
 
+	public ArrayList<Exemplar> getExemplares() {
+		return exemplares;
+	}
+
+	public void adicionarExemplar(Exemplar e){
+		exemplares.add(e);
+	}
 	public void adicionarAutor(Autor a) {
 		autores.add(a);
 	}
@@ -55,6 +64,8 @@ public class Livro implements Registro {
     	
     	return null;
     }
+
+
 	public String getIsbn() {
 		return isbn;
 	}
@@ -77,6 +88,10 @@ public class Livro implements Registro {
 
 	public void setEditora(Editora editora) {
 		this.editora = editora.getId();
+	}
+
+	public void setEditora(long editora) {
+		this.editora = editora;
 	}
 
 	public void setIsbn(String isbn) {
@@ -104,7 +119,12 @@ public class Livro implements Registro {
 		s.append(getEditora() == 0 ? "\nEditora: N�o informada" : "\n-----\n" + viewEditora()+"\n-------");
 		s.append("\nAutores: ");
 		for (Autor a : getAutores())
-			s.append("\n\t" + a);
+			s.append("\n\t").append(a);
+		s.append("\n--------------\n");
+		s.append("Exemplares\n");
+		for(Exemplar e : this.exemplares){
+			s.append(e).append("\n");
+		}
 		return s.toString();
 	}
 	@Override

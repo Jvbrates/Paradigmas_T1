@@ -1,7 +1,10 @@
 package infra.console.util;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.sql.Date;
 import java.util.Scanner;
 
 public class Util {
@@ -14,7 +17,26 @@ public class Util {
 			str = s.nextLine();
 			invalida = str.length() > maximo || str.length() < minimo; 
 			if (invalida)
-				System.out.println("O tamanho maximo permitido eh de " + maximo + " caracteres e o mínimo de "+minimo+".");
+				System.out.println("O tamanho maximo permitido eh de " + maximo + " caracteres e o mï¿½nimo de "+minimo+".");
+		} while (invalida);
+		return str;
+	}
+
+	public static String lerStringOpt(String rotulo, int minimo, int maximo){
+		Scanner s = new Scanner(System.in);
+		String str = "";
+		boolean invalida = true;
+		do {
+			System.out.print(rotulo);
+			str = s.nextLine();
+			invalida = str.length() > maximo || str.length() < minimo;
+			if(str.length() == 0)
+				return null;
+
+			if (invalida)
+				System.out.println("O tamanho maximo permitido eh de " + maximo + " caracteres e o mï¿½nimo de "+minimo+".");
+
+
 		} while (invalida);
 		return str;
 	}
@@ -29,9 +51,9 @@ public class Util {
 				opcao = Integer.parseInt(s.nextLine());
 				invalida = opcao < minimo || opcao > maximo;
 				if (invalida)
-					System.out.println("Valor inválido!");
+					System.out.println("Valor invï¿½lido!");
 			} catch (NumberFormatException e) {
-				System.out.println("Valor inválido!");
+				System.out.println("Valor invï¿½lido!");
 				invalida = true;
 				opcao = 0;
 			}
@@ -53,7 +75,7 @@ public class Util {
 	}
 
 	public static boolean confirma(String titulo) {
-		System.out.println("Confirmação - " + titulo+ ": [s/n] ?");
+		System.out.println("Confirmaï¿½ï¿½o - " + titulo+ ": [s/n] ?");
 		return "S".equals(Util.lerSouN());
 	}
 	public static void main(String[] args) {
@@ -65,4 +87,48 @@ public class Util {
 	      System.out.println(formatarDate.format(data)); // Mostra a data
 
 	}
+
+	static Date current_date;
+
+	static void setCurrent_date(Date current_date){
+		Util.current_date = current_date;
+	}
+
+	public static Date getCurrent_date() {
+		if (current_date == null)
+			current_date = new Date(new java.util.Date().getTime());
+		return current_date;
+	}
+
+	public static void nextTime(int days){
+		;
+		Calendar c = Calendar.getInstance();
+		c.setTime(current_date);
+		c.add(Calendar.DATE, days);
+		java.util.Date tmp = c.getTime();
+		current_date = new Date(tmp.getTime());
+	}
+
+	public static Date nowPlusDays(int days){
+		;
+		Calendar c = Calendar.getInstance();
+		c.setTime(current_date);
+		c.add(Calendar.DATE, days);
+		java.util.Date tmp = c.getTime();
+		return new Date(tmp.getTime());
+	}
+
+	public static Date PlusDays(Date d, int days){
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		c.add(Calendar.DATE, days);
+		java.util.Date tmp = c.getTime();
+		return new Date(tmp.getTime());
+	}
+
+	public static long diffDays(Date a, Date b){
+	return ChronoUnit.DAYS.between(LocalDate.parse(b.toString()), LocalDate.parse(a.toString()));
+
+	}
+
 }

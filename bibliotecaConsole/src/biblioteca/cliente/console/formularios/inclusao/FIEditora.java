@@ -41,12 +41,18 @@ public class FIEditora extends FInclusao<Editora> {
 			Editoras editoras = new Editoras();
 			try {
 				editoras.alterar(getRegistro());
-			} catch (DadoNaoEncontrado e) {
-				System.out.println("Editora nao encontrada");
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} else {
 			Editoras editoras = new Editoras();
-			editoras.inserir(getRegistro());
+			try {
+				editoras.inserir(getRegistro());
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

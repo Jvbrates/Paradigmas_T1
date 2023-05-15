@@ -4,6 +4,9 @@ import infra.console.formularios.cadastro.FAlteracao;
 import infra.console.util.Util;
 import infra.negocios.DadoNaoEncontrado;
 import infra.negocios.Registros;
+
+import java.util.Collection;
+
 import biblioteca.cliente.console.formularios.inclusao.FIEditora;
 import biblioteca.entidades.Editora;
 
@@ -13,15 +16,15 @@ public class FAEditora extends FAlteracao<Editora> {
 	}
 
 	@Override
-	protected void ler() {
+	protected void ler() throws Exception {
 		String nome = Util.lerString("Nome: ", 1, 60);
 		setRegistroBusca(new Editora(nome));
 	}
 
 	@Override
-	protected void submeter() {
+	protected void submeter() throws Exception {
 		try {
-			Editora e = buscar();
+			Editora e = buscar().iterator().next();
 			System.out.println(e);
 			FIEditora fi = new FIEditora(getRegistros());
 			fi.setRegistro(e);

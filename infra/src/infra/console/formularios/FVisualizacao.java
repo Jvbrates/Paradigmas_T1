@@ -27,8 +27,8 @@ public abstract class FVisualizacao<T extends Registro> extends FBusca<T> {
 
 	protected void submeter() throws Exception {
 		try {
-			T t = buscar().iterator().next();
-			System.out.println(t);
+			buscar().forEach(System.out::println);
+			
 		} catch (DadoNaoEncontrado e) {
 			System.out.println("Registro nao encontrado.");
 		}

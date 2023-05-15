@@ -1,6 +1,7 @@
 package infra.console.formularios.cadastro;
 
 import infra.console.formularios.cadastro.campos.Campo;
+import infra.console.formularios.cadastro.campos.CampoInteiroMonoValorado;
 import infra.console.formularios.cadastro.campos.CampoMonoValorado;
 import infra.console.formularios.cadastro.campos.CampoMultiValorado;
 import infra.console.util.Util;
@@ -27,10 +28,14 @@ public abstract class FInclusao<T extends Registro> extends FCadastro<T> {
 		setTitulo("Inclus�o de " + registros.getRotulo());
 	}
 
-	protected ArrayList<Campo> campos = new ArrayList<Campo>();
+	protected ArrayList<Campo> campos = new ArrayList<>();
 
 	protected void adicionarCampo(Campo c) {
 		campos.add(c);
+	}
+
+	protected void removeCampo(String rotulo){
+		campos.removeIf(c -> c.getRotulo().equals(rotulo));
 	}
 
 	public void setCampos(ArrayList<Campo> campos) {
@@ -76,6 +81,16 @@ public abstract class FInclusao<T extends Registro> extends FCadastro<T> {
 					temp.setValor(Util.lerString(c.getRotulo() + ": ", temp.getMinimo(), temp.getMaximo()));
 				}
 			}
+			if (c instanceof CampoInteiroMonoValorado) {
+				CampoInteiroMonoValorado temp = (CampoInteiroMonoValorado) c;
+				if (temp.getValor() != 0)
+					System.out.println(c.getRotulo() + ": " + temp.getValor());
+				else {
+					if (modoAlteracao())
+						temp.setMinimo(0);
+					temp.setValor(Util.lerInteiro(c.getRotulo() + ": ", temp.getMinimo(), temp.getMaximo()));
+				}
+			}
 			if (c instanceof CampoMultiValorado) {
 				CampoMultiValorado temp = (CampoMultiValorado) c;
 				System.out.println(temp.getRotulo());
@@ -104,9 +119,22 @@ public abstract class FInclusao<T extends Registro> extends FCadastro<T> {
 		throw new IllegalArgumentException("Nao foi encontrado tal campo monovalorado na lista de campos do formulario");
 	}
 
+	public CampoInteiroMonoValorado getCampoInteiroMonoValorado(String nomeCampo) {
+		for (Campo c : getCampos())
+			if (c instanceof CampoInteiroMonoValorado)
+				if (nomeCampo.equals(c.getRotulo()))
+					return (CampoInteiroMonoValorado) c;
+		throw new IllegalArgumentException("Nao foi encontrado tal campo monovalorado na lista de campos do formulario");
+	}
+
 	protected String getValor(String nomeCampo) {
 		return getCampoMonoValorado(nomeCampo).getValor();
 	}
+
+	protected int getValorInteiro(String nomeCampo) {
+		return getCampoInteiroMonoValorado(nomeCampo).getValor();
+	}
+
 
 	protected ArrayList<String> getValores(String nomeCampo) {
 		for (Campo c : getCampos())

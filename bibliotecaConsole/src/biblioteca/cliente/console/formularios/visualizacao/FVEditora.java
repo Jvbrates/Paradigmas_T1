@@ -12,8 +12,13 @@ public class FVEditora extends FVisualizacao<Editora> {
 	}
 
 	@Override
-	protected void ler() {
+	protected void ler(){
 		String nome = Util.lerString("Nome: ", 1, 60);
-		setRegistroBusca(new Editora(nome));
+		try {
+			setRegistroBusca(new Editora(nome));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

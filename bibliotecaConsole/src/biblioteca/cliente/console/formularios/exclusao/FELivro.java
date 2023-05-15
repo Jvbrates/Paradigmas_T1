@@ -11,7 +11,7 @@ public class FELivro extends FExclusao<Livro> {
 	}
 
 	@Override
-	public void ler() {
+	public void ler() throws Exception{
 		String isbn = Util.lerString("ISBN: ", 10, 13);
 		setRegistroBusca(new Livro(isbn));
 	}
